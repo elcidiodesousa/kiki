@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Para a Kinésia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rose:#e8a0bf;
+    --rose-deep:#c2517d;
+    --lilac:#b79ce0;
+    --lilac-deep:#7e5bb5;
+    --gold:#d8a652;
+    --gold-soft:#f2dcae;
+    --cream:#fdf6f0;
+    --plum:#3d2240;
+    --ink:#4a2e4f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    width:100%;min-height:100vh;
+    background:linear-gradient(160deg,#fdf6f0 0%,#f7e9f1 35%,#efe1f6 70%,#f7e9f1 100%);
+    font-family:'Quicksand',sans-serif;
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .stars span{
+    position:absolute;width:4px;height:4px;border-radius:50%;
+    background:var(--gold-soft);opacity:0;
+    animation:twinkle 4s ease-in-out infinite;
+  }
+  @keyframes twinkle{0%,100%{opacity:0}50%{opacity:.9}}
+
+  .stage{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 18px}
+
+  /* ===== ENVELOPE ===== */
+  #envelopeStage{display:flex}
+  .envelope-wrap{display:flex;flex-direction:column;align-items:center;gap:22px}
+  .envelope{
+    position:relative;width:240px;height:160px;cursor:pointer;
+    filter:drop-shadow(0 18px 30px rgba(124,60,110,.25));
+    transition:transform .25s ease;
+  }
+  .envelope:hover{transform:translateY(-4px) scale(1.02)}
+  .env-body{position:absolute;inset:0;border-radius:10px;background:linear-gradient(135deg,var(--rose) 0%,var(--lilac) 100%)}
+  .env-flap{
+    position:absolute;top:0;left:0;right:0;height:90px;
+    background:linear-gradient(135deg,var(--rose-deep) 0%,var(--lilac-deep) 100%);
+    clip-path:polygon(0 0,100% 0,50% 78%);
+    border-radius:10px 10px 0 0;
+    transform-origin:top center;
+    transition:transform .7s cubic-bezier(.6,-0.1,.3,1.4);
+    z-index:3;
+  }
+  .envelope.open .env-flap{transform:rotateX(165deg)}
+  .env-seal{
+    position:absolute;top:46px;left:50%;transform:translate(-50%,0);
+    width:46px;height:46px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,var(--gold-soft),var(--gold) 70%);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;
+    color:var(--plum);font-size:20px;z-index:4;
+    box-shadow:0 2px 6px rgba(0,0,0,.18);
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .envelope.open .env-seal{opacity:0;transform:translate(-50%,0) scale(.4)}
+  .env-letter{
+    position:absolute;left:10px;right:10px;bottom:8px;height:120px;
+    background:var(--cream);border-radius:6px;
+    box-shadow:0 -2px 6px rgba(0,0,0,.06);
+    z-index:2;
+    transition:transform .6s cubic-bezier(.2,.7,.3,1.2) .15s;
+  }
+  .envelope.open .env-letter{transform:translateY(-46px)}
+  .env-hint{font-size:13px;color:var(--lilac-deep);letter-spacing:.3px;opacity:.85}
+  .pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--rose-deep);display:inline-block;margin-right:7px;animation:pulseDot 1.6s ease-in-out infinite}
+  @keyframes pulseDot{0%,100%{opacity:.3}50%{opacity:1}}
+
+  /* ===== PANEL ===== */
+  .panel{width:100%;max-width:560px;text-align:center;opacity:0;transform:translateY(18px);animation:riseIn .7s ease forwards}
+  @keyframes riseIn{to{opacity:1;transform:translateY(0)}}
+  .eyebrow{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--lilac-deep);font-weight:600;margin-bottom:14px}
+  .headline{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(26px,5.2vw,38px);color:var(--plum);line-height:1.28;margin-bottom:18px}
+  .headline em{font-style:italic;color:var(--rose-deep)}
+  .body-text{font-size:16px;line-height:1.75;color:var(--ink);max-width:460px;margin:0 auto 26px}
+  .body-text + .body-text{margin-top:-14px}
+  .btn{
+    font-family:'Quicksand',sans-serif;font-weight:600;font-size:14px;letter-spacing:.4px;color:#fff;
+    background:linear-gradient(120deg,var(--rose-deep),var(--lilac-deep));border:none;border-radius:30px;
+    padding:13px 30px;cursor:pointer;box-shadow:0 8px 20px rgba(126,91,181,.3);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(126,91,181,.4)}
+  .btn:active{transform:translateY(0) scale(.98)}
+  .btn-ghost{background:transparent;color:var(--lilac-deep);border:1.5px solid var(--lilac);box-shadow:none}
+  .btn-ghost:hover{background:rgba(183,156,224,.12)}
+  .btn-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .progress-dots{display:flex;gap:7px;justify-content:center;margin-top:28px}
+  .progress-dots span{width:6px;height:6px;border-radius:50%;background:var(--rose);opacity:.35}
+  .progress-dots span.on{opacity:1;background:var(--rose-deep)}
+
+  /* ===== ROLE CARD (apresentação engraçada) ===== */
+  .role-cards{display:flex;gap:14px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+  .role-card{
+    background:rgba(255,255,255,.6);border:1px solid rgba(216,166,82,.35);border-radius:16px;
+    padding:18px 16px;width:150px;
+  }
+  .role-emoji{font-size:30px;margin-bottom:8px}
+  .role-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--plum);margin-bottom:4px}
+  .role-tag{font-size:11.5px;color:var(--lilac-deep);line-height:1.4}
+
+  /* ===== 14 SHOWCASE ===== */
+  .fourteen{position:relative;width:170px;height:170px;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,var(--gold-soft) 0%,rgba(242,220,174,0) 72%)}
+  .fourteen-ring{position:absolute;inset:6px;border-radius:50%;border:1.5px dashed var(--gold);animation:spin 22s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .fourteen-num{font-family:'Cormorant Garamond',serif;font-weight:600;font-style:italic;font-size:62px;color:var(--rose-deep);text-shadow:0 4px 14px rgba(194,81,125,.25)}
+  .lip-mark{position:absolute;bottom:6px;right:4px;font-size:20px;transform:rotate(-12deg);opacity:.85}
+
+  /* ===== CONFESSION LIST ===== */
+  .confess-list{list-style:none;text-align:left;max-width:420px;margin:0 auto 26px;display:flex;flex-direction:column;gap:12px}
+  .confess-list li{
+    background:rgba(255,255,255,.55);border-left:3px solid var(--rose-deep);border-radius:0 12px 12px 0;
+    padding:12px 16px;font-size:14.5px;line-height:1.55;
+  }
+  .confess-list b{color:var(--rose-deep)}
+
+  /* ===== QUIZ ===== */
+  .quiz-card{background:rgba(255,255,255,.55);backdrop-filter:blur(6px);border:1px solid rgba(216,166,82,.35);border-radius:18px;padding:24px 22px;margin-bottom:22px;text-align:left}
+  .quiz-q{font-size:15px;font-weight:600;color:var(--plum);margin-bottom:14px}
+  .quiz-opts{display:flex;flex-direction:column;gap:10px}
+  .quiz-opt{
+    text-align:left;font-family:'Quicksand',sans-serif;font-weight:500;font-size:14.5px;color:var(--ink);
+    background:#fff;border:1.5px solid var(--rose);border-radius:12px;padding:11px 16px;cursor:pointer;
+    transition:all .2s ease;
+  }
+  .quiz-opt:hover{border-color:var(--rose-deep);background:rgba(232,160,191,.08)}
+  .quiz-opt.correct{background:linear-gradient(120deg,#fbe6ee,#f3e4fb);border-color:var(--rose-deep);color:var(--rose-deep);font-weight:700}
+  .quiz-opt.wrong{opacity:.4}
+  .quiz-opt:disabled{cursor:default}
+  .quiz-feedback{margin-top:14px;font-size:14px;color:var(--lilac-deep);font-style:italic;font-family:'Cormorant Garamond',serif;min-height:20px}
+
+  /* ===== CERTIFICADO ===== */
+  .certificate{
+    background:rgba(255,255,255,.7);border:2px solid var(--gold);border-radius:18px;
+    padding:28px 24px;margin-bottom:24px;position:relative;
+  }
+  .certificate::before, .certificate::after{
+    content:'✦';position:absolute;color:var(--gold);font-size:18px;
+  }
+  .certificate::before{top:10px;left:14px}
+  .certificate::after{top:10px;right:14px}
+  .cert-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--lilac-deep);font-weight:700;margin-bottom:10px}
+  .cert-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:26px;color:var(--rose-deep);margin-bottom:10px}
+  .cert-desc{font-size:14px;color:var(--ink);line-height:1.6;margin-bottom:12px}
+  .cert-sign{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--lilac-deep)}
+
+  /* ===== FINAL ===== */
+  .heart-burst{position:relative;width:100%;height:60px;margin-bottom:4px}
+  .floating-heart{position:absolute;bottom:0;font-size:18px;opacity:0;animation:floatUp 2.6s ease-in forwards}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6)}15%{opacity:1}100%{opacity:0;transform:translateY(-90px) scale(1.1)}}
+  .signature{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:var(--rose-deep);margin-top:4px}
+  .signature small{display:block;font-size:13px;color:var(--lilac-deep);margin-top:4px;font-style:normal;letter-spacing:.3px}
+
+  .hidden{display:none !important}
+  @media (max-width:480px){
+    .envelope{width:200px;height:135px}
+    .env-flap{height:75px}
+    .env-letter{height:100px}
+    .role-cards{gap:10px}
+    .role-card{width:42%}
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<!-- ENVELOPE -->
+<div class="stage" id="envelopeStage">
+  <div class="envelope-wrap">
+    <div class="envelope" id="envelope" onclick="openEnvelope()">
+      <div class="env-letter"></div>
+      <div class="env-body"></div>
+      <div class="env-flap"></div>
+      <div class="env-seal">K</div>
+    </div>
+    <div class="env-hint"><span class="pulse-dot"></span>toca aqui, meu anjo, isto é para ti</div>
+  </div>
+</div>
+
+<!-- 1. ABERTURA -->
+<div class="stage hidden" id="scene1">
+  <div class="panel">
+    <p class="eyebrow">alerta de invasão</p>
+    <h1 class="headline">O teu Benzinho<br/>invadiu a tua tarde<br/><em>sem pedir desculpa.</em></h1>
+    <p class="body-text">Não há aniversário, não há motivo, não fiz nada de errado (espero). Só me apeteceu aparecer aqui, mesmo de longe, e roubar-te um sorriso. Vem comigo ver o que preparei?</p>
+    <div class="btn-row"><button class="btn" onclick="goTo('scene1','scene2')">sim, mostra-me ✦</button></div>
+    <div class="progress-dots"><span class="on"></span><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- 2. APRESENTAÇÃO ENGRAÇADA -->
+<div class="stage hidden" id="scene2">
+  <div class="panel">
+    <p class="eyebrow">apresentação oficial dos envolvidos</p>
+    <h1 class="headline">Para o caso de te teres esquecido <em>de quem somos:</em></h1>
+    <div class="role-cards">
+      <div class="role-card">
+        <div class="role-emoji">👑</div>
+        <div class="role-name">Kinésia</div>
+        <div class="role-tag">linda, espectacular e, simplesmente, o amor da minha vida. </div>
+      </div>
+      <div class="role-card">
+        <div class="role-emoji">👑</div>
+        <div class="role-name">Cidinho</div>
+        <div class="role-tag">sortudo, especialista em fazer-te perder tempo a sorrir para ao telefone.</div>
+      </div>
+    </div>
+    <p class="body-text">Resumindo: Nao sei se fui eu ou foste tu quem saiu a ganhar, kkk.</p>
+    <div class="btn-row">
+      <button class="btn-ghost btn" onclick="goTo('scene2','scene1')">voltar</button>
+      <button class="btn" onclick="goTo('scene2','scene3')">continuar ✦</button>
+    </div>
+    <div class="progress-dots"><span></span><span class="on"></span><span></span><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- 3. DIA 14 -->
+<div class="stage hidden" id="scene3">
+  <div class="panel">
+    <div class="fourteen">
+      <div class="fourteen-ring"></div>
+      <div class="fourteen-num">14</div>
+      <div class="lip-mark">💋</div>
+    </div>
+    <p class="eyebrow">um dia que ficou marcado no calendário e em mim</p>
+    <h1 class="headline">Dia 14 deste mês,<br/><em>aconteceu o nosso primeiro beijo.</em></h1>
+    <p class="body-text">E continua a ser o único, não é falta de vontade minha. Foi só um beijo, mas o meu cérebro guardou para reproduzir sempre que bem lhe apetecer. Ja agora, eu fico pensando em ti de repente, é dessa vitamina que preciso.</p>
+    <div class="btn-row">
+      <button class="btn-ghost btn" onclick="goTo('scene3','scene2')">voltar</button>
+      <button class="btn" onclick="goTo('scene3','scene4')">continuar ✦</button>
+    </div>
+    <div class="progress-dots"><span></span><span></span><span class="on"></span><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- 4. CONFISSÕES -->
+<div class="stage hidden" id="scene4">
+  <div class="panel">
+    <p class="eyebrow">confissões que nunca te fiz por mensagem</p>
+    <h1 class="headline">Coisas que penso<br/><em>e nunca te disse a sério:</em></h1>
+    <ul class="confess-list">
+      <li><b>01.</b> Às vezes releio as nossas conversas só para sentir que estás aqui ao lado.</li>
+      <li><b>02.</b> Já pratiquei o que te ia dizer a seguir e depois esqueci tudo quando te ouvi.</li>
+      <li><b>03.</b> Isso eu vivo te diendo, mas repito, eu sou completamente apaixonado por ti.</li>
+      <li><b>04.</b> Penso mais em ti do que em qualquer outra pessoa.</li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn-ghost btn" onclick="goTo('scene4','scene3')">voltar</button>
+      <button class="btn" onclick="goTo('scene4','scene5')">continuar ✦</button>
+    </div>
+    <div class="progress-dots"><span></span><span></span><span></span><span class="on"></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- 5. QUIZ -->
+<div class="stage hidden" id="scene5">
+  <div class="panel">
+    <p class="eyebrow">teste rápido, sem pressão (mas é a sério)</p>
+    <h1 class="headline">Quem sente mais saudade <em>do outro?</em></h1>
+    <div class="quiz-card">
+      <p class="quiz-q">Escolhe com sinceridade absoluta:</p>
+      <div class="quiz-opts" id="quizOpts">
+        <button class="quiz-opt" onclick="answerQuiz(this,false)">Eu, Kinésia, obviamente.</button>
+        <button class="quiz-opt" onclick="answerQuiz(this,false)">Empatados.</button>
+        <button class="quiz-opt" onclick="answerQuiz(this,true)">Tu, Elcidio, sentes mais saudade de mim.</button>
+      </div>
+      <p class="quiz-feedback" id="quizFeedback"></p>
+    </div>
+    <div class="btn-row">
+      <button class="btn-ghost btn" onclick="goTo('scene5','scene4')">voltar</button>
+      <button class="btn" id="toFinalBtn" onclick="goTo('scene5','scene6')" disabled style="opacity:.4;cursor:not-allowed">continuar ✦</button>
+    </div>
+    <div class="progress-dots"><span></span><span></span><span></span><span></span><span class="on"></span><span></span></div>
+  </div>
+</div>
+
+<!-- 6. CERTIFICADO + FINAL -->
+<div class="stage hidden" id="scene6">
+  <div class="panel">
+    <div class="certificate">
+      <p class="cert-title">certificado oficial e juridicamente questionável</p>
+      <p class="cert-name">Kinésia</p>
+      <p class="cert-desc">é por este meio declarada <b>a pessoa mais bonita, mais especial e mais amada</b> pelo signatário abaixo, válidos para sempre (sem possibilidade de recurso).</p>
+      <p class="cert-sign">assinado, Elcidio De Sousa — testemunhas: o coração dele.</p>
+    </div>
+    <div class="heart-burst" id="heartBurst"></div>
+    <p class="eyebrow">a parte mais importante de tudo isto</p>
+    <h1 class="headline">Onde quer que estejas agora,<br/><em>espero que estejas a sorrir.</em></h1>
+    <p class="body-text">Foi só isso que quis fazer hoje: chegar até ti mesmo de longe e arrancar-te um sorriso bobo no meio do dia. Se funcionou, missão cumprida. Se não funcionou... bem, finge que sim, por mim.</p>
+    <p class="signature">com todo o carinho do mundo,<small>Seu Benzinho, sempre.</small></p>
+    <div class="btn-row" style="margin-top:20px"><button class="btn" onclick="replay()">ver tudo outra vez ✦</button></div>
+    <div class="progress-dots"><span></span><span></span><span></span><span></span><span></span><span class="on"></span></div>
+  </div>
+</div>
+
+<script>
+function makeStars(){
+  const wrap = document.getElementById('stars');
+  for(let i=0;i<24;i++){
+    const s = document.createElement('span');
+    s.style.left = Math.random()*100+'%';
+    s.style.top = Math.random()*100+'%';
+    s.style.animationDelay = (Math.random()*4)+'s';
+    s.style.width = s.style.height = (2+Math.random()*3)+'px';
+    wrap.appendChild(s);
+  }
+}
+makeStars();
+
+function openEnvelope(){
+  const env = document.getElementById('envelope');
+  if(env.classList.contains('open')) return;
+  env.classList.add('open');
+  setTimeout(()=>{
+    document.getElementById('envelopeStage').classList.add('hidden');
+    document.getElementById('scene1').classList.remove('hidden');
+  }, 850);
+}
+
+function goTo(fromId, toId){
+  document.getElementById(fromId).classList.add('hidden');
+  const to = document.getElementById(toId);
+  to.classList.remove('hidden');
+  const panel = to.querySelector('.panel');
+  panel.style.animation = 'none';
+  requestAnimationFrame(()=>{ panel.style.animation = 'riseIn .7s ease forwards'; });
+  if(toId === 'scene6'){ burstHearts(); }
+}
+
+function answerQuiz(btn, isCorrect){
+  const opts = document.querySelectorAll('#quizOpts .quiz-opt');
+  opts.forEach(o => o.disabled = true);
+  opts.forEach(o => { if(o !== btn) o.classList.add('wrong'); });
+  const feedback = document.getElementById('quizFeedback');
+  if(isCorrect){
+    btn.classList.add('correct');
+    feedback.textContent = 'Correto! Mas o Cidinho também concorre ao pódio, só para constar.';
+  } else {
+    feedback.textContent = 'Boa tentativa — a resposta certa era mesmo a última 🐢';
+  }
+  const nextBtn = document.getElementById('toFinalBtn');
+  nextBtn.disabled = false;
+  nextBtn.style.opacity = 1;
+  nextBtn.style.cursor = 'pointer';
+}
+
+function burstHearts(){
+  const wrap = document.getElementById('heartBurst');
+  wrap.innerHTML = '';
+  const hearts = ['💗','💛','💜','💗','💛'];
+  for(let i=0;i<14;i++){
+    const h = document.createElement('span');
+    h.className = 'floating-heart';
+    h.textContent = hearts[i % hearts.length];
+    h.style.left = (8 + Math.random()*84)+'%';
+    h.style.animationDelay = (Math.random()*1.4)+'s';
+    h.style.fontSize = (16+Math.random()*10)+'px';
+    wrap.appendChild(h);
+  }
+}
+
+function replay(){
+  ['scene1','scene2','scene3','scene4','scene5','scene6'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.querySelectorAll('#quizOpts .quiz-opt').forEach(o => { o.disabled = false; o.classList.remove('correct','wrong'); });
+  document.getElementById('quizFeedback').textContent = '';
+  const nextBtn = document.getElementById('toFinalBtn');
+  nextBtn.disabled = true; nextBtn.style.opacity = .4; nextBtn.style.cursor='not-allowed';
+  document.getElementById('envelope').classList.remove('open');
+  document.getElementById('envelopeStage').classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>
